@@ -243,6 +243,8 @@ Link to `Documentation Homepage <https://google-images-download.readthedocs.io/e
 |                   |             |                                                                                                                               |
 |                   |             | This argument takes a delimited set of values e.g. wikipedia.org,wikimedia.org                                                |
 +-------------------+-------------+-------------------------------------------------------------------------------------------------------------------------------+
+| name_map          | -           | A mapping from query to name. Used as keys in the returned paths and naming for storing metadata. Not supported in cmd line.  |
++-------------------+-------------+-------------------------------------------------------------------------------------------------------------------------------+
 | help              | h           | show the help message regarding the usage of the above arguments                                                              |
 +-------------------+-------------+-------------------------------------------------------------------------------------------------------------------------------+
 

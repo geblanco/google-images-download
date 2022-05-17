@@ -1091,9 +1091,19 @@ class googleimagesdownload:
                             print("Getting URLs without downloading images...")
                         else:
                             print("Starting Download...")
+
                     items, errorCount, abs_path = self._get_all_items(images, main_directory, dir_name, limit,
                                                                       arguments)  # get all image items and download images
-                    paths[pky + search_keyword[i] + sky] = abs_path
+
+                    path_key = pky + search_keyword[i] + sky
+
+                    for item in items:
+                        item["query"] = path_key
+
+                    if arguments["name_map"] and path_key in arguments["name_map"]:
+                        path_key = arguments["name_map"][path_key]
+
+                    paths[path_key] = abs_path
 
                     # dumps into a json file
                     if arguments['extract_metadata']:
@@ -1102,7 +1112,7 @@ class googleimagesdownload:
                                 os.makedirs("logs")
                         except OSError as e:
                             print(e)
-                        json_file = open("logs/" + search_keyword[i] + ".json", "w")
+                        json_file = open("logs/" + path_key + ".json", "w")
                         json.dump(items, json_file, indent=4, sort_keys=True)
                         json_file.close()
 
