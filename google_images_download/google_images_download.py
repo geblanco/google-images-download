@@ -1095,15 +1095,13 @@ class googleimagesdownload:
                     items, errorCount, abs_path = self._get_all_items(images, main_directory, dir_name, limit,
                                                                       arguments)  # get all image items and download images
 
-                    for item in items:
-                        item["query"] = pky + search_keyword[i] + sky
-
                     path_key = pky + search_keyword[i] + sky
+
+                    for item in items:
+                        item["query"] = path_key
 
                     if arguments["name_map"] and path_key in arguments["name_map"]:
                         path_key = arguments["name_map"][path_key]
-                    else:
-                        path_key = re.sub(r"[\:\\/\*'\"]", "", path_key)
 
                     paths[path_key] = abs_path
 
