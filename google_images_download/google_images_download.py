@@ -43,7 +43,7 @@ args_list = ["keywords", "keywords_from_file", "prefix_keywords", "suffix_keywor
              "output_directory", "image_directory", "no_directory", "proxy", "similar_images", "specific_site",
              "print_urls", "print_size", "print_paths", "metadata", "extract_metadata", "socket_timeout",
              "thumbnail", "thumbnail_only", "language", "prefix", "chromedriver", "related_images", "safe_search",
-             "no_numbering",
+             "no_numbering", "name_map",
              "offset", "no_download", "save_source", "silent_mode", "ignore_urls"]
 
 
@@ -1095,13 +1095,15 @@ class googleimagesdownload:
                     items, errorCount, abs_path = self._get_all_items(images, main_directory, dir_name, limit,
                                                                       arguments)  # get all image items and download images
 
-                    path_key = pky + search_keyword[i] + sky
-
                     for item in items:
-                        item["query"] = path_key
+                        item["query"] = pky + search_keyword[i] + sky
+
+                    path_key = pky + search_keyword[i] + sky
 
                     if arguments["name_map"] and path_key in arguments["name_map"]:
                         path_key = arguments["name_map"][path_key]
+                    else:
+                        path_key = re.sub(r"[\:\\/\*'\"]", "", path_key)
 
                     paths[path_key] = abs_path
 
@@ -1112,6 +1114,8 @@ class googleimagesdownload:
                                 os.makedirs("logs")
                         except OSError as e:
                             print(e)
+                        # user should sanitize path in name_map. Only sanitize when name
+                        # map not applied.
                         json_file = open("logs/" + path_key + ".json", "w")
                         json.dump(items, json_file, indent=4, sort_keys=True)
                         json_file.close()
