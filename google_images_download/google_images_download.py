@@ -948,7 +948,7 @@ class googleimagesdownload:
                     paths_agg[i] = paths[i]
                 if not arguments["silent_mode"]:
                     if arguments['print_paths']:
-                        print(paths.encode('raw_unicode_escape').decode('utf-8'))
+                        print(paths)
                 return paths_agg, errors
         # for input coming from CLI
         else:
