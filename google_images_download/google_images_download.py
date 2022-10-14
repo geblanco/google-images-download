@@ -10,32 +10,33 @@ import sys
 version = (3, 0)
 cur_version = sys.version_info
 if cur_version >= version:  # If the Current Version of Python is 3.0 or above
-    import urllib.request
-    from urllib.request import Request, urlopen
-    from urllib.request import URLError, HTTPError
-    from urllib.parse import quote
     import http.client
-    from http.client import IncompleteRead, BadStatusLine
+    import urllib.request
+
+    from http.client import BadStatusLine, IncompleteRead
+    from urllib.parse import quote
+    from urllib.request import Request, URLError, HTTPError, urlopen
 
     http.client._MAXHEADERS = 1000
 else:  # If the Current Version of Python is 2.x
-    import urllib2
-    from urllib2 import Request, urlopen
-    from urllib2 import URLError, HTTPError
     from urllib import quote
+
     import httplib
-    from httplib import IncompleteRead, BadStatusLine
+    import urllib2
+
+    from httplib import BadStatusLine, IncompleteRead
+    from urllib2 import Request, URLError, HTTPError, urlopen
 
     httplib._MAXHEADERS = 1000
-import time  # Importing the time library to check the time of code execution
 import os
-import argparse
-import ssl
-import datetime
-import json
 import re
+import ssl
+import json
+import time  # Importing the time library to check the time of code execution
 import codecs
 import socket
+import argparse
+import datetime
 
 args_list = [
     "keywords",
@@ -508,22 +509,22 @@ class googleimagesdownload:
         return json.loads(lines[3])[0][2]
 
     def _image_objects_from_pack(self, data, only_grid=False):
-        image_objects = json.loads(data)[31][-1][12][2]
+        image_objects = json.loads(data)[56][-1][0][-1][-1][0]
         # x[0] = 1 before 19: include in gridshow
         # x[0] = 19 end of gridshow
         # x[0] = 7 related searches
-        if not only_grid:
-            image_objects = [x for x in image_objects if x[0] == 1 or x[0] == 19]
-        else:
-            ret = []
-            for img in image_objects:
-                if img[0] == 1 or img[0] == 19:
-                    ret.append(img)
-                if img[0] == 19:
-                    break
-            image_objects = ret
+        # x[1] = None adds or carousel
+        ret = []
+        for img in image_objects:
+            obj = list(img[0][0].values())[0]
+            if not obj or not obj[1]:
+                continue
+            if obj[0] == 1 or obj[0] == 19:
+                ret.append(obj)
+            if obj[0] == 19:
+                break
 
-        return image_objects
+        return ret
 
     # Downloading entire Web Document (Raw Page Content)
     def download_page(self, url, parse=True, only_grid=False):
